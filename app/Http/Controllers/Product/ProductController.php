@@ -66,7 +66,8 @@ class ProductController extends ApiControler
                         'cod_mar',
                         'cod_gru',
                         'cod_tip',
-                        'stock_min'
+                        'stock_min',
+                        'rotacion'
                         ]);
 
         return $this->showAll($product);
