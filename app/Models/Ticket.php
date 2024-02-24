@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ticket extends Model
 {
@@ -33,4 +34,20 @@ class Ticket extends Model
      * @var bool
      */
     public $timestamps = true;
+
+    /**
+     * Get the type ticket that owns the ticket.
+     */
+    public function type():BelongsTo
+    {
+        return $this->belongsTo(TypeTicket::class, 'cod_type', 'idreg');
+    }
+
+    /**
+     * Get the customer ticket that owns the ticket.
+     */
+    public function customer():BelongsTo
+    {
+        return $this->belongsTo(Customer::class, 'cod_ter', 'cod_ter');
+    }
 }

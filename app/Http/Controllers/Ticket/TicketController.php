@@ -15,7 +15,8 @@ class TicketController extends ApiControler
      */
     public function index()
     {
-        $tickets = Ticket::all();
+        $tickets = Ticket::with('type','customer')
+                    ->get();
         return $this->showAll($tickets);
     }
 
@@ -38,6 +39,21 @@ class TicketController extends ApiControler
     public function store(Request $request)
     {
         //
+    }
+
+    /**
+     * Get tickets for the sku product.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function get_product(Request $request)
+    {
+        $tickets = Ticket::with('type','customer')
+                        ->where('cod_ref', $request->input('sku'))
+                        ->get();
+
+        return $this->showAll($tickets);
     }
 
     /**

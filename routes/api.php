@@ -27,3 +27,4 @@ Route::post('product', [ProductController::class, 'show_one'])->name('products.s
 
 //Tickets
 Route::resource('tickets', TicketController::class, ['except' => ['create','edit']]);
+Route::post('ticketProduct', [TicketController::class, 'get_product'])->name('tickets.get_product');

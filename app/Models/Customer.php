@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Customer extends Model
 {
@@ -11,7 +12,7 @@ class Customer extends Model
      *
      * @var string
      */
-    protected $table = 'CoMae_ter';
+    protected $table = 'Comae_ter';
 
     /**
      * The primary key associated with the table.
@@ -40,4 +41,12 @@ class Customer extends Model
      * @var bool
      */
     public $timestamps = false;
+
+    /**
+     * Get the tickets for the customer.
+     */
+    public function tickets(): HasMany
+    {
+        return $this->hasMany(Ticket::class, 'cod_ter', 'cod_ter');
+    }
 }
