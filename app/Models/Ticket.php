@@ -19,7 +19,7 @@ class Ticket extends Model
      *
      * @var string
      */
-    protected $primaryKey = '';
+    protected $primaryKey = 'idreg';
 
     /**
      * Indicates if the model's ID is auto-incrementing.
@@ -33,7 +33,7 @@ class Ticket extends Model
      *
      * @var bool
      */
-    public $timestamps = true;
+    public $timestamps = false;
 
     /**
      * Get the type ticket that owns the ticket.

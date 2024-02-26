@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\ApiControler;
-use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends ApiControler
@@ -48,6 +48,20 @@ class UserController extends ApiControler
     public function show($id)
     {
         //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function show_one(Request $request)
+    {
+        $user = User::where('cod_mer', $request->input('cod_mer'))
+                        ->get();
+
+        return $this->showAll($user);
     }
 
     /**

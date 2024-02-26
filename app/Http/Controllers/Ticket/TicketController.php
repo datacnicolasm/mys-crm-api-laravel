@@ -86,12 +86,19 @@ class TicketController extends ApiControler
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update_one(Request $request)
     {
-        //
+        $ticket = Ticket::where('idreg', $request->input('idreg'))->with('type','customer','user')->first();
+
+        $ticket->cod_estado = $request->input('cod_estado');
+        $ticket->des_ticket = $request->input('des_ticket');
+        $ticket->cod_user = $request->input('cod_user');
+        
+        $ticket->save();
+
+        return $this->showOne($ticket);
     }
 
     /**
