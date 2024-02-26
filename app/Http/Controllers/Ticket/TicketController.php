@@ -57,14 +57,18 @@ class TicketController extends ApiControler
     }
 
     /**
-     * Display the specified resource.
+     * Display the specified ticket.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show_one(Request $request)
     {
-        //
+        $tickets = Ticket::with('type','customer','user')
+                        ->where('idreg', $request->input('idreg'))
+                        ->get();
+
+        return $this->showAll($tickets);
     }
 
     /**

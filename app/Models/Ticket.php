@@ -50,4 +50,12 @@ class Ticket extends Model
     {
         return $this->belongsTo(Customer::class, 'cod_ter', 'cod_ter');
     }
+
+    /**
+     * Get the user ticket that owns the ticket.
+     */
+    public function user():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cod_user', 'cod_mer');
+    }
 }
