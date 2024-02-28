@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Ticket\TicketController;
+use App\Http\Controllers\Ticket\TypeTicketController;
 use App\Http\Controllers\User\UserController;
 
 /*
@@ -32,5 +33,9 @@ Route::post('ticketProduct', [TicketController::class, 'get_product'])->name('ti
 Route::post('ticket', [TicketController::class, 'show_one'])->name('tickets.show_one');
 Route::post('ticketUpdate', [TicketController::class, 'update_one'])->name('tickets.update_one');
 
+//Users
 Route::resource('users', UserController::class, ['except' => ['show','create','edit']]);
 Route::post('user', [UserController::class, 'show_one'])->name('users.show_one');
+
+//Types tickets
+Route::resource('typetickets', TypeTicketController::class, ['except' => ['show','update','create','edit']]);

@@ -16,8 +16,18 @@ class Ticket extends Model
         'title_ticket',
         'des_ticket',
         'cod_pipeline',
-        'cod_estado'
+        'cod_estado',
+        'fecha_aded'
     ];
+
+    //protected $casts = ['fecha_aded' => 'datetime:Y-m-d H:00'];
+
+    /**
+     * The storage format of the model's date columns.
+     *
+     * @var string
+     */
+    //protected $dateFormat = 'AAAA-DD-MM hh:mm:ss[.nnn]';
 
     /**
      * The table associated with the model.
@@ -50,7 +60,7 @@ class Ticket extends Model
     /**
      * Get the type ticket that owns the ticket.
      */
-    public function type():BelongsTo
+    public function type(): BelongsTo
     {
         return $this->belongsTo(TypeTicket::class, 'cod_type', 'idreg');
     }
@@ -58,7 +68,7 @@ class Ticket extends Model
     /**
      * Get the customer ticket that owns the ticket.
      */
-    public function customer():BelongsTo
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'cod_ter', 'cod_ter');
     }
@@ -66,8 +76,16 @@ class Ticket extends Model
     /**
      * Get the user ticket that owns the ticket.
      */
-    public function user():BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'cod_user', 'cod_mer');
+    }
+
+    /**
+     * Get the user creator ticket that owns the ticket.
+     */
+    public function creator(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'cod_creator', 'cod_mer');
     }
 }

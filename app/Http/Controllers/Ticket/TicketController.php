@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Ticket;
 
 use App\Http\Controllers\ApiControler;
 use App\Models\Ticket;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class TicketController extends ApiControler
@@ -36,7 +37,8 @@ class TicketController extends ApiControler
             'title_ticket'  =>  $request->input('title_ticket'),
             'des_ticket'    =>  $request->input('des_ticket'),
             'cod_pipeline'  =>  $request->input('cod_pipeline'),
-            'cod_estado'    =>  $request->input('cod_estado')
+            'cod_estado'    =>  $request->input('cod_estado'),
+            'fecha_aded'    =>  Carbon::now()->format('Y-d-m H:i:s')
         ]);
 
         return $this->showOne($ticket);
@@ -65,7 +67,7 @@ class TicketController extends ApiControler
      */
     public function show_one(Request $request)
     {
-        $tickets = Ticket::with('type','customer','user')
+        $tickets = Ticket::with('type','customer','user','creator')
                         ->where('idreg', $request->input('idreg'))
                         ->get();
 

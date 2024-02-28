@@ -49,4 +49,12 @@ class User extends Model
     {
         return $this->hasMany(Ticket::class, 'cod_mer', 'cod_user');
     }
+
+    /**
+     * Get the tickets for the user.
+     */
+    public function ticketsCreated(): HasMany
+    {
+        return $this->hasMany(Ticket::class, 'cod_mer', 'cod_creator');
+    }
 }
