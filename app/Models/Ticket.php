@@ -7,6 +7,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Ticket extends Model
 {
+
+    protected $fillable = [
+        'cod_type',
+        'cod_user',
+        'cod_ter',
+        'cod_ref',
+        'title_ticket',
+        'des_ticket',
+        'cod_pipeline',
+        'cod_estado'
+    ];
+
     /**
      * The table associated with the model.
      *

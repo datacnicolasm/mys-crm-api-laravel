@@ -21,16 +21,6 @@ class TicketController extends ApiControler
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -38,7 +28,18 @@ class TicketController extends ApiControler
      */
     public function store(Request $request)
     {
-        //
+        $ticket = Ticket::create([
+            'cod_type'      =>  $request->input('cod_type'),
+            'cod_user'      =>  $request->input('cod_user'),
+            'cod_ter'       =>  $request->input('cod_ter'),
+            'cod_ref'       =>  $request->input('cod_ref'),
+            'title_ticket'  =>  $request->input('title_ticket'),
+            'des_ticket'    =>  $request->input('des_ticket'),
+            'cod_pipeline'  =>  $request->input('cod_pipeline'),
+            'cod_estado'    =>  $request->input('cod_estado')
+        ]);
+
+        return $this->showOne($ticket);
     }
 
     /**

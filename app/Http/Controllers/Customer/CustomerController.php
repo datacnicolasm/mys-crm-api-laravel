@@ -15,7 +15,8 @@ class CustomerController extends ApiControler
      */
     public function index()
     {
-        $customers = Customer::take(2)->get(['cod_ter','nom_ter','dir','tel1']);
+        $customers = Customer::where('clasific','1')
+                        ->get(['idrow','cod_ter','nom_ter','dir','tel1','email','ciudad']);
         return $this->showAll($customers);
     }
 
@@ -43,12 +44,18 @@ class CustomerController extends ApiControler
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show_one(Request $request)
     {
-        //
+        $id = $request->input('idrow');
+        $customers = Customer::with('tickets','tickets.type')
+                        ->where('clasific','1')
+                        ->where('idrow', $id)
+                        ->get(['idrow','cod_ter','nom_ter','dir','tel1','email','ciudad']);
+        
+        return $this->showAll($customers);
     }
 
     /**
