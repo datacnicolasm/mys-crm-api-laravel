@@ -16,7 +16,7 @@ class TicketController extends ApiControler
      */
     public function index()
     {
-        $tickets = Ticket::with('type','customer')
+        $tickets = Ticket::with('type','customer','references','references.product')
                     ->get();
         return $this->showAll($tickets);
     }
@@ -33,11 +33,11 @@ class TicketController extends ApiControler
             'cod_type'      =>  $request->input('cod_type'),
             'cod_user'      =>  $request->input('cod_user'),
             'cod_ter'       =>  $request->input('cod_ter'),
-            'cod_ref'       =>  $request->input('cod_ref'),
             'title_ticket'  =>  $request->input('title_ticket'),
             'des_ticket'    =>  $request->input('des_ticket'),
             'cod_pipeline'  =>  $request->input('cod_pipeline'),
             'cod_estado'    =>  $request->input('cod_estado'),
+            'cod_creator'   =>  $request->input('cod_creator'),
             'fecha_aded'    =>  Carbon::now()->format('Y-d-m H:i:s')
         ]);
 
@@ -67,7 +67,7 @@ class TicketController extends ApiControler
      */
     public function show_one(Request $request)
     {
-        $tickets = Ticket::with('type','customer','user','creator')
+        $tickets = Ticket::with('type','customer','user','creator','references','references.product')
                         ->where('idreg', $request->input('idreg'))
                         ->get();
 

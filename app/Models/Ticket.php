@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Ticket extends Model
 {
@@ -12,11 +13,11 @@ class Ticket extends Model
         'cod_type',
         'cod_user',
         'cod_ter',
-        'cod_ref',
         'title_ticket',
         'des_ticket',
         'cod_pipeline',
         'cod_estado',
+        'cod_creator',
         'fecha_aded'
     ];
 
@@ -87,5 +88,13 @@ class Ticket extends Model
     public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'cod_creator', 'cod_mer');
+    }
+
+    /**
+     * Get the references for the ticket.
+     */
+    public function references(): HasMany
+    {
+        return $this->hasMany(TicketReference::class, 'idreg_ticket', 'idreg');
     }
 }

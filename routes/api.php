@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Customer\CustomerController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Ticket\TicketController;
+use App\Http\Controllers\Ticket\TicketRefController;
 use App\Http\Controllers\Ticket\TypeTicketController;
 use App\Http\Controllers\User\UserController;
 
@@ -39,3 +40,6 @@ Route::post('user', [UserController::class, 'show_one'])->name('users.show_one')
 
 //Types tickets
 Route::resource('typetickets', TypeTicketController::class, ['except' => ['show','update','create','edit']]);
+
+//Referencias tickets
+Route::resource('ticketRef', TicketRefController::class, ['except' => ['show','create','edit']]);

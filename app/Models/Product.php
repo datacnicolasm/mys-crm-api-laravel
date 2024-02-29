@@ -8,6 +8,7 @@ use App\Models\Brand;
 use App\Models\Group;
 use App\Models\Linea;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Product extends Model
 {
@@ -75,6 +76,14 @@ class Product extends Model
     public function type():BelongsTo
     {
         return $this->belongsTo(Linea::class, 'cod_tip', 'cod_tip');
+    }
+
+    /**
+     * Get the reference that owns the product.
+     */
+    public function references(): HasMany
+    {
+        return $this->hasMany(TicketReference::class, 'cod_ref', 'cod_ref');
     }
 }
 
