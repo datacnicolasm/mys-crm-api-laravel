@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Product;
 
 use App\Http\Controllers\ApiControler;
 use App\Models\Product;
+use App\Models\Ticket;
+use App\Models\TicketReference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends ApiControler
 {
@@ -17,7 +20,6 @@ class ProductController extends ApiControler
     public function index()
     {
         $products = Product::with('brand','group','type')
-                    ->take(100)
                     ->get(['idrow',
                     'cod_ref',
                     'nom_ref',
@@ -59,40 +61,44 @@ class ProductController extends ApiControler
 
         $product = Product::with('brand','group','type')
                         ->where($arg_input, $arg_value)
-                        ->get(['idrow',
-                        'cod_ref',
-                        'nom_ref',
-                        'val_ref',
-                        'cod_mar',
-                        'cod_gru',
-                        'cod_tip',
-                        'stock_min',
-                        'rotacion'
-                        ]);
+                        ->first(['idrow',
+                           'cod_ref',
+                           'nom_ref',
+                           'val_ref',
+                           'cod_mar',
+                           'cod_gru',
+                           'cod_tip',
+                           'stock_min',
+                           'rotacion'
+        ]);
 
-        return $this->showAll($product);
+        $saldoFinal = Product::saldoImportaciones($product->cod_ref);
+        Log::info('Consulta:', ['saldo'=>$saldoFinal]);
+
+        return $this->showOne($product);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * Return Tickets product
      */
-    public function update(Request $request, $id)
+    public function tickets_product(Request $request)
     {
-        //
-    }
+        if ($request->has('sku'))
+        {
+            $arg_value = $request->input('sku');
+            $arg_input = 'cod_ref';
+        } elseif ($request->has('idrow')) {
+            $arg_value = $request->input('idrow');
+            $arg_input = 'idrow';
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $id_tickets = TicketReference::where($arg_input, $arg_value)
+                    ->distinct()->pluck('idreg_ticket');
+
+        $tickets = Ticket::with('type','customer','user')
+                    ->whereIn('idreg', $id_tickets)
+                    ->get();                   
+                    
+        return $this->showAll($tickets);
     }
 }

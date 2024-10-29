@@ -34,6 +34,10 @@ return [
     */
 
     'mailers' => [
+        'mailersend' => [
+            'transport' => 'mailersend',
+        ],
+
         'smtp' => [
             'transport' => 'smtp',
             'host' => env('MAIL_HOST', 'smtp.mailgun.org'),
@@ -92,7 +96,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'example@trial-3zxk54vy61p4jy6v.mlsender.net'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 

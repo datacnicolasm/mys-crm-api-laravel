@@ -6,10 +6,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.0.2",
-        "guzzlehttp/guzzle": "^7.2",
+        "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
-        "laravel/tinker": "^2.7"
+        "laravel/tinker": "^2.7",
+        "mailersend/laravel-driver": "^2.5",
+        "sendgrid/sendgrid": "^8.1",
+        "twilio/sdk": "^8.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -57,7 +60,8 @@
         "preferred-install": "dist",
         "sort-packages": true,
         "allow-plugins": {
-            "pestphp/pest-plugin": true
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": true
         }
     },
     "minimum-stability": "stable",

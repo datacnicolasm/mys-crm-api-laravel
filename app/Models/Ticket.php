@@ -97,4 +97,12 @@ class Ticket extends Model
     {
         return $this->hasMany(TicketReference::class, 'idreg_ticket', 'idreg');
     }
+
+    /**
+     * Get the notices for the ticket.
+     */
+    public function notices(): HasMany
+    {
+        return $this->hasMany(Notice::class, 'id_ticket', 'idreg');
+    }
 }

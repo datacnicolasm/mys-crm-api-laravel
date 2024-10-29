@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Ticket;
 
 use App\Http\Controllers\ApiControler;
+use App\Models\Notice;
+use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\TicketReference;
@@ -45,6 +47,19 @@ class TicketRefController extends ApiControler
             'cod_ref'       =>  $request->input('cod_ref'),
             'cantidad'      =>  intval($request->input('cantidad')),
             'val_uni'       =>  intval($request->input('val_uni'))
+        ]);
+        $ticketRef = TicketReference::with('product')->find( $ticketRef->idreg);
+
+        /**
+         * Creación de la notificación en la base de datos.
+         */
+        $notice = Notice::create([
+            'id_ticket' => $ticketRef->idreg_ticket,
+            'cod_user' => $request->input('cod_creator'),
+            'title' => 'ha agregado una referencia al ticket.',
+            'text_notice' => 'Se ha agregado una referencia.',
+            'created_at' => Carbon::now()->format('Y-d-m H:i:s'),
+            'updated_at' => Carbon::now()->format('Y-d-m H:i:s')
         ]);
 
         return $this->showOne($ticketRef);
@@ -92,6 +107,15 @@ class TicketRefController extends ApiControler
      */
     public function destroy($id)
     {
-        //
+        $ticketRef = TicketReference::find($id);
+
+        if (!$ticketRef) {
+            return response()->json(['message' => 'El TicketReference no existe'], 404);
+        }
+
+        $ticketRef->delete();
+
+        return response()->json(['message' => 'TicketReference eliminado exitosamente'], 200);
+
     }
 }

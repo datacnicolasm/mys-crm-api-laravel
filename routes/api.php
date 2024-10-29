@@ -20,26 +20,32 @@ use App\Http\Controllers\User\UserController;
 |
 */
 
-//Cuestomers
-Route::resource('customers', CustomerController::class, ['except' => ['show','create','edit']]);
-Route::post('customer', [CustomerController::class, 'show_one'])->name('customers.show_one');
+Route::middleware('api.token')->group(function () {
+    //Cuestomers
+    Route::resource('customers', CustomerController::class, ['except' => ['show','create','edit']]);
+    Route::post('customer', [CustomerController::class, 'show_one'])->name('customers.show_one');
 
-//Products
-Route::resource('products', ProductController::class, ['except' => ['show','create','edit']]);
-Route::post('product', [ProductController::class, 'show_one'])->name('products.show_one');
+    //Products
+    Route::resource('products', ProductController::class, ['except' => ['show','create','edit']]);
+    Route::post('product', [ProductController::class, 'show_one'])->name('products.show_one');
 
-//Tickets
-Route::resource('tickets', TicketController::class, ['except' => ['show','update','create','edit']]);
-Route::post('ticketProduct', [TicketController::class, 'get_product'])->name('tickets.get_product');
-Route::post('ticket', [TicketController::class, 'show_one'])->name('tickets.show_one');
-Route::post('ticketUpdate', [TicketController::class, 'update_one'])->name('tickets.update_one');
+    //Tickets
+    Route::resource('tickets', TicketController::class, ['except' => ['show','update','create','edit']]);
+    Route::post('ticket', [TicketController::class, 'show_one'])->name('tickets.show_one');
+    Route::post('ticketUpdate', [TicketController::class, 'update_one'])->name('tickets.update_one');
+    Route::post('createNotice', [TicketController::class, 'createNotice'])->name('tickets.create_notice');
+    Route::post('indexUserFilter', [TicketController::class, 'indexUserFilter'])->name('tickets.index_user');
 
-//Users
-Route::resource('users', UserController::class, ['except' => ['show','create','edit']]);
-Route::post('user', [UserController::class, 'show_one'])->name('users.show_one');
+    //Users
+    Route::resource('users', UserController::class, ['except' => ['show','create','edit']]);
+    Route::post('user', [UserController::class, 'show_one'])->name('users.show_one');
+    Route::post('userNotices', [UserController::class, 'noticesUser'])->name('user.notices');
+    Route::post('userTicketsReferencias', [UserController::class, 'userTicketsReferencias'])->name('user.referencias');
 
-//Types tickets
-Route::resource('typetickets', TypeTicketController::class, ['except' => ['show','update','create','edit']]);
+    //Types tickets
+    Route::resource('typetickets', TypeTicketController::class, ['except' => ['show','update','create','edit']]);
 
-//Referencias tickets
-Route::resource('ticketRef', TicketRefController::class, ['except' => ['show','create','edit']]);
+    //Referencias tickets
+    Route::resource('ticketRef', TicketRefController::class, ['except' => ['show','create','edit']]);
+    Route::post('tickesProduct', [ProductController::class, 'tickets_product'])->name('product.tickets');
+});

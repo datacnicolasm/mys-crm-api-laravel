@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\ApiControler;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Response;
 
 class UserController extends ApiControler
 {
@@ -96,5 +98,48 @@ class UserController extends ApiControler
     public function destroy($id)
     {
         //
+    }
+
+    public function noticesUser(Request $request)
+    {
+        $user = User::find($request->input('cod_mer'));
+
+        // Verifica si el usuario existe
+        if (!$user) {
+            return Response::json(['message' => 'Usuario no encontrado'], 404);
+        }
+
+        // Obtén las notificaciones del usuario
+        $notices = $user->tickets()
+                ->with('notices')
+                ->get()
+                ->pluck('notices')
+                ->flatten()
+                ->sortByDesc('created_at');
+
+        return $this->showAll($notices);
+    }
+
+    public function userTicketsReferencias(Request $request){
+        $user = User::find($request->input('cod_mer'));
+
+        // Verifica si el usuario existe
+        if (!$user) {
+            return Response::json(['message' => 'Usuario no encontrado'], 404);
+        }
+
+        // Obtener las referencias de los tickets
+        $referencias = $user->tickets()
+                ->where('cod_type', 1)
+                ->whereNotIn('cod_estado', [2, 3])
+                ->with('references')
+                ->get()
+                ->pluck('references')
+                ->flatten()
+                ->filter(function ($reference) {
+                    return Product::condicionalExistencias($reference->cod_ref);
+                });
+
+        return $this->showAll($referencias);
     }
 }

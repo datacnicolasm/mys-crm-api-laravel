@@ -47,7 +47,7 @@ class User extends Model
      */
     public function tickets(): HasMany
     {
-        return $this->hasMany(Ticket::class, 'cod_mer', 'cod_user');
+        return $this->hasMany(Ticket::class, 'cod_user', 'cod_mer');
     }
 
     /**
@@ -56,5 +56,13 @@ class User extends Model
     public function ticketsCreated(): HasMany
     {
         return $this->hasMany(Ticket::class, 'cod_mer', 'cod_creator');
+    }
+
+    /**
+     * Get the notices for the user.
+     */
+    public function notices(): HasMany
+    {
+        return $this->hasMany(Notice::class, 'cod_user', 'cod_mer');
     }
 }

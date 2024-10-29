@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
+    'api_token' => env('API_TOKEN', 'default_token'),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
