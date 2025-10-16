@@ -88,26 +88,6 @@ class TicketController extends ApiControler
             'updated_at' => Carbon::now()->format('Y-d-m H:i:s')
         ]);
 
-        /**
-         * Envío de correo electronico.
-         */
-        $details = [
-            'id-ticket' => $ticket->idreg,
-            'name-user' => User::where('cod_mer', $request->input('cod_user'))->pluck('nom_mer')->first(),
-            'name-user-creator' => User::where('cod_mer', $request->input('cod_creator'))->pluck('nom_mer')->first(),
-            'date-create' => Carbon::now()->format('d-M-Y h:i a')
-        ];
-
-        //Mail::to($request->input('mail_user'))->send(new NoticeTicketMail($details));
-
-        /**
-         * Envío de mensaje por WhatsApp.
-         */
-        #$to = '+573106870873';
-        #$message = 'Your custom message here';
-
-        #$this->whatsappService->sendMessage($to, $message);
-
         return $this->showOne($ticket);
     }
 
