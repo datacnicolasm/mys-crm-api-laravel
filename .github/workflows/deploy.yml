@@ -24,7 +24,6 @@ jobs:
             php artisan migrate --force
             php artisan config:clear && php artisan route:clear && php artisan view:clear
             php artisan config:cache && php artisan route:cache && php artisan view:cache
-            chown -R www-data:www-data storage bootstrap/cache || true
             sudo -n systemctl reload php8.3-fpm || true
             sudo -n systemctl reload nginx || true
             php artisan up || true
