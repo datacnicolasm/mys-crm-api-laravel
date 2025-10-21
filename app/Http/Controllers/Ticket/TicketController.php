@@ -4,14 +4,15 @@ namespace App\Http\Controllers\Ticket;
 
 use App\Http\Controllers\ApiControler;
 use App\Mail\NoticeTicketMail;
+use App\Models\Customer;
 use App\Models\Notice;
 use App\Models\Ticket;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use App\Services\WhatsAppService;
 
 class TicketController extends ApiControler
 {
@@ -29,8 +30,8 @@ class TicketController extends ApiControler
      */
     public function index()
     {
-        $tickets = Ticket::with('type','customer','references','references.product')
-                    ->get();
+        $tickets = Ticket::with('type', 'customer', 'references', 'references.product')
+            ->get();
         return $this->showAll($tickets);
     }
 
@@ -45,11 +46,16 @@ class TicketController extends ApiControler
 
         $monthsAgo = now()->subMonths($request->input('time_month'))->format('Y-d-m H:i:s');
 
-        $tickets = Ticket::with('type', 'customer', 'references', 'references.product')
-                ->where('cod_user', $request->input('cod_mer'))
-                ->where('fecha_aded', '>=', $monthsAgo)
+        if (trim($request->input('cod_mer')) == '05' || trim($request->input('cod_mer')) == '02') {
+            $tickets = Ticket::with('type', 'customer', 'references', 'references.product')
                 ->get();
-        
+        } else {
+            $tickets = Ticket::with('type', 'customer', 'references', 'references.product')
+                ->where('cod_user', $request->input('cod_mer'))
+                //->where('fecha_aded', '>=', $monthsAgo)
+                ->get();
+        }
+
         return $this->showAll($tickets);
     }
 
@@ -59,7 +65,7 @@ class TicketController extends ApiControler
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, WhatsAppService $wa)
     {
         /**
          * Creación del ticket en la base de datos.
@@ -88,6 +94,30 @@ class TicketController extends ApiControler
             'updated_at' => Carbon::now()->format('Y-d-m H:i:s')
         ]);
 
+        try {
+            $customer = Customer::where('cod_ter', $request->input('cod_ter'))->first();
+
+            $phone = '+57' . trim(strval(($customer->tel1)));
+            $tpl     = 'new_ticket_crm';
+
+            $result = $wa->sendTemplate($phone, $tpl, 'es_CO');
+
+            if (WhatsAppService::isAccepted($result)) {
+                $notice_wa = Notice::create([
+                    'id_ticket' => $ticket->idreg,
+                    'cod_user' => $request->input('cod_creator'),
+                    'title' => 'ha notificado a Whatsapp.',
+                    'text_notice' => 'Mensaje enviado al cliente ' . $phone,
+                    'created_at' => Carbon::now()->format('Y-d-m H:i:s'),
+                    'updated_at' => Carbon::now()->format('Y-d-m H:i:s')
+                ]);
+            }
+
+        } catch (\Throwable $e) {
+
+            report($e);
+        }
+
         return $this->showOne($ticket);
     }
 
@@ -99,16 +129,18 @@ class TicketController extends ApiControler
      */
     public function show_one(Request $request)
     {
-        $tickets = Ticket::with('type',
-                        'customer',
-                        'user',
-                        'creator',
-                        'references',
-                        'references.product',
-                        'notices',
-                        'notices.user')
-                        ->where('idreg', $request->input('idreg'))
-                        ->get();
+        $tickets = Ticket::with(
+            'type',
+            'customer',
+            'user',
+            'creator',
+            'references',
+            'references.product',
+            'notices',
+            'notices.user'
+        )
+            ->where('idreg', $request->input('idreg'))
+            ->get();
 
         return $this->showAll($tickets);
     }
@@ -132,12 +164,12 @@ class TicketController extends ApiControler
      */
     public function update_one(Request $request)
     {
-        $ticket = Ticket::where('idreg', $request->input('idreg'))->with('type','customer','user')->first();
+        $ticket = Ticket::where('idreg', $request->input('idreg'))->with('type', 'customer', 'user')->first();
 
         $ticket->cod_estado = $request->input('cod_estado');
         $ticket->des_ticket = $request->input('des_ticket');
         $ticket->cod_user = $request->input('cod_user');
-        
+
         $ticket->save();
 
         $notice = Notice::create([
