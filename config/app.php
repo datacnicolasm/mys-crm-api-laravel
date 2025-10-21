@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Facade;
 
 return [
 
-    'api_token' => env('API_TOKEN', 'default_token'),
+    'api_token' => env('API_TOKEN', '9c296f109cbfa21632dc522a3aade323'),
 
     /*
     |--------------------------------------------------------------------------
