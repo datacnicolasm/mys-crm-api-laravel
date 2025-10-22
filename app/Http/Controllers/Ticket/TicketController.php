@@ -6,6 +6,7 @@ use App\Http\Controllers\ApiControler;
 use App\Mail\NoticeTicketMail;
 use App\Models\Customer;
 use App\Models\Notice;
+use App\Models\Product;
 use App\Models\Ticket;
 use App\Models\User;
 use Carbon\Carbon;
@@ -16,11 +17,10 @@ use Illuminate\Support\Facades\Mail;
 
 class TicketController extends ApiControler
 {
-    protected $whatsappService;
 
-    public function __construct(WhatsAppService $whatsappService)
+    public function __construct()
     {
-        $this->whatsappService = $whatsappService;
+        
     }
 
     /**
@@ -128,7 +128,7 @@ class TicketController extends ApiControler
             $cod_cliente = $request->input('cod_ter');
 
             $template_vars = [$name_mer, $cod_cliente, $id_ticket];
-            
+
             $tpl_mer = 'new_ticket_crm_empleado';
 
             $result_mer = $wa->sendTemplateText($phone_mer, $tpl_mer, $template_vars, 'es_CO');
