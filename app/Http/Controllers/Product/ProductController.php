@@ -73,7 +73,8 @@ class ProductController extends ApiControler
         ]);
 
         $saldoFinal = Product::saldoImportaciones($product->cod_ref);
-        Log::info('Consulta:', ['saldo'=>$saldoFinal]);
+        
+        //Log::info('Consulta:', ['saldo'=>$saldoFinal]);
 
         return $this->showOne($product);
     }

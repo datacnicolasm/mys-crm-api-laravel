@@ -102,6 +102,8 @@ class TicketController extends ApiControler
 
             $result = $wa->sendTemplate($phone, $tpl, 'es_CO');
 
+            //Log::debug($result);
+
             if (WhatsAppService::isAccepted($result)) {
                 $notice_wa = Notice::create([
                     'id_ticket' => $ticket->idreg,
@@ -112,6 +114,26 @@ class TicketController extends ApiControler
                     'updated_at' => Carbon::now()->format('Y-d-m H:i:s')
                 ]);
             }
+        } catch (\Throwable $e) {
+
+            report($e);
+        }
+
+        try {
+            $user = User::where('cod_mer', $request->input('cod_user'))->first();
+
+            $phone_mer = '+57' . trim(strval(($user->tel)));
+            $name_mer = trim(ucfirst(strtolower(explode(" ", $user->nom_mer)[0])));
+            $id_ticket = $ticket->idreg;
+            $cod_cliente = $request->input('cod_ter');
+
+            $template_vars = [$name_mer, $cod_cliente, $id_ticket];
+            
+            $tpl_mer = 'new_ticket_crm_empleado';
+
+            $result_mer = $wa->sendTemplateText($phone_mer, $tpl_mer, $template_vars, 'es_CO');
+
+            //Log::debug($result_mer);
 
         } catch (\Throwable $e) {
 
