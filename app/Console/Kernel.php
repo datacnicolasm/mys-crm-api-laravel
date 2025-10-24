@@ -54,6 +54,7 @@ class Kernel extends ConsoleKernel
                 $result_mer = $wa->sendTemplateText($phone, $tpl_mer, $template_vars, 'en');
 
                 Log::debug(["Whatsapp enviado" => [$cod_ref, $cliente, $phone, $id_ticket, $name_mer, $result_mer]]);
+                
             } catch (\Throwable $e) {
 
                 report($e);

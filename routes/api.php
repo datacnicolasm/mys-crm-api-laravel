@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Customer\CustomerController;
+use App\Http\Controllers\Motocicletas\MotocicletaController;
 use App\Http\Controllers\Product\ProductController;
 use App\Http\Controllers\Ticket\TicketController;
 use App\Http\Controllers\Ticket\TicketRefController;
@@ -48,4 +49,7 @@ Route::middleware('api.token')->group(function () {
     //Referencias tickets
     Route::resource('ticketRef', TicketRefController::class, ['except' => ['show','create','edit']]);
     Route::post('tickesProduct', [ProductController::class, 'tickets_product'])->name('product.tickets');
+
+    //Motocicletas
+    Route::resource('motos', MotocicletaController::class, ['except' => ['show','create','edit']]);
 });
