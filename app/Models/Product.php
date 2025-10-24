@@ -153,6 +153,25 @@ class Product extends Model
     }
 
     /**
+     * Get saldo de bodega Bogota E-COMMERCE
+     */
+    public static function saldoEcommerce($codRef)
+    {
+        // Definir variable de bodega importaciones 900
+        $codBod = '001';
+
+        // Ejecutar el procedimiento almacenado
+        $resultados = DB::select('EXEC InSaldosReferenciaBodegaNM @cod_ref = ?, @cod_bod = ?', [$codRef, $codBod]);
+
+        // Verificar que hay resultados
+        if (!empty($resultados)) {
+            return $resultados[0];
+        } else {
+            return null;
+        }
+    }
+
+    /**
      * Get saldo de bodega Bogota
      */
     public static function saldoMedellin($codRef)

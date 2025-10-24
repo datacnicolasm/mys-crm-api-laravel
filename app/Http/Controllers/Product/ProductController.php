@@ -102,4 +102,18 @@ class ProductController extends ApiControler
                     
         return $this->showAll($tickets);
     }
+
+    public function saldo_producto(Request $request)
+    {
+        $referencia = $request->input('referencia');
+
+        $dataSaldo = Product::saldoEcommerce($referencia);
+
+        if($dataSaldo)
+        {
+            return $this->successResponse(['data'=>$dataSaldo], 200);
+        }else{
+            return $this->errorResponse('Error',404);
+        };
+    }
 }

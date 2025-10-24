@@ -29,6 +29,7 @@ Route::middleware('api.token')->group(function () {
     //Products
     Route::resource('products', ProductController::class, ['except' => ['show','create','edit']]);
     Route::post('product', [ProductController::class, 'show_one'])->name('products.show_one');
+    Route::post('saldoProducto', [ProductController::class, 'saldo_producto'])->name('products.saldo_producto');
 
     //Tickets
     Route::resource('tickets', TicketController::class, ['except' => ['show','update','create','edit']]);
