@@ -158,7 +158,7 @@ class Product extends Model
     public static function saldoEcommerce($codRef)
     {
         // Definir variable de bodega importaciones 900
-        $codBod = '001';
+        $codBod = '001,008';
 
         // Ejecutar el procedimiento almacenado
         $resultados = DB::select('EXEC InSaldosReferenciaBodegaNM @cod_ref = ?, @cod_bod = ?', [$codRef, $codBod]);

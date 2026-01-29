@@ -107,7 +107,12 @@ class ProductController extends ApiControler
     {
         $referencia = $request->input('referencia');
 
-        $dataSaldo = Product::saldoEcommerce($referencia);
+        $product = Product::where('cod_ref', $referencia)->first(['val_ref']);
+
+        $dataSaldo = [
+            "saldo"     => Product::saldoEcommerce($referencia)->Saldo_final,
+            "val_ref"   =>  $product->val_ref
+        ];
 
         if($dataSaldo)
         {

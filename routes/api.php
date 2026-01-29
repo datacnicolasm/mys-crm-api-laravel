@@ -21,7 +21,7 @@ use App\Http\Controllers\User\UserController;
 |
 */
 
-Route::middleware('api.token')->group(function () {
+Route::prefix('api/v1')->middleware('api.token')->group(function () {
     //Cuestomers
     Route::resource('customers', CustomerController::class, ['except' => ['show','create','edit']]);
     Route::post('customer', [CustomerController::class, 'show_one'])->name('customers.show_one');
