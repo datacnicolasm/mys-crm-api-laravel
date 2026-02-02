@@ -14,16 +14,4 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            set -euo pipefail
-            PROJECT="/home/user/htdocs/srv646774.hstgr.cloud"
-            cd "$PROJECT"
-            php artisan down || true
-            git fetch --all
-            git reset --hard origin/main
-            composer install --no-dev --prefer-dist --optimize-autoloader
-            php artisan migrate --force
-            php artisan config:clear && php artisan route:clear && php artisan view:clear
-            php artisan config:cache && php artisan route:cache && php artisan view:cache
-            sudo -n systemctl reload php8.3-fpm || true
-            sudo -n systemctl reload nginx || true
-            php artisan up || true
+            sudo /usr/local/bin/deploy_tu_app.sh
