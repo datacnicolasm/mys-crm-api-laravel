@@ -14,4 +14,4 @@ jobs:
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
-            sudo -u user /usr/local/bin/deploy_tu_app.sh
+            sudo -u user /usr/local/bin/deploy_app.sh
