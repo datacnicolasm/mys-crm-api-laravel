@@ -30,6 +30,7 @@ Route::prefix('api/v1')->middleware('api.token')->group(function () {
     Route::resource('products', ProductController::class, ['except' => ['show','create','edit']]);
     Route::post('product', [ProductController::class, 'show_one'])->name('products.show_one');
     Route::post('saldoProducto', [ProductController::class, 'saldo_producto'])->name('products.saldo_producto');
+    Route::post('saldoProductos', [ProductController::class, 'saldo_productos'])->name('products.saldo_productos');
 
     //Tickets
     Route::resource('tickets', TicketController::class, ['except' => ['show','update','create','edit']]);

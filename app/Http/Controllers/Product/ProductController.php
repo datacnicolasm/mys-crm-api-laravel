@@ -9,6 +9,7 @@ use App\Models\TicketReference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 
 class ProductController extends ApiControler
 {
@@ -108,17 +109,56 @@ class ProductController extends ApiControler
         $referencia = $request->input('referencia');
 
         $product = Product::where('cod_ref', $referencia)->first(['val_ref']);
+        $saldoObj = Product::saldoEcommerce($referencia);
 
-        $dataSaldo = [
-            "saldo"     => Product::saldoEcommerce($referencia)->Saldo_final,
-            "val_ref"   =>  $product->val_ref
-        ];
+        if (!$product || !$saldoObj) {
+            return $this->errorResponse('Referencia no encontrada o sin saldo', 404);
+        }
 
-        if($dataSaldo)
-        {
-            return $this->successResponse(['data'=>$dataSaldo], 200);
-        }else{
-            return $this->errorResponse('Error',404);
-        };
+        return $this->successResponse([
+            'data' => [
+                'saldo'   => (float) trim($saldoObj->Saldo_final),
+                'val_ref' => $product->val_ref,
+            ]
+        ], 200);
+    }
+
+
+    public function saldo_productos(Request $request)
+    {
+        $data = $request->validate([
+            'referencias' => 'required|array|max:6',
+            'referencias.*' => 'required|string|max:50',
+        ]);
+
+        // Normaliza entradas (quita espacios)
+        $refs = array_values(array_unique(array_map('trim', $data['referencias'])));
+
+        // Trae precios y normaliza la llave (trim del cod_ref)
+        $pricesByRef = Product::query()
+            ->whereIn('cod_ref', $refs)
+            ->pluck('val_ref', 'cod_ref')              // Collection: [ "07BB0359   " => 999 ]
+            ->mapWithKeys(fn($v, $k) => [trim($k) => $v]); // [ "07BB0359" => 999 ]
+
+        // Saldos (SP) por referencia, con caché corto para evitar reventar la BD
+        $items = [];
+        foreach ($refs as $ref) {
+            $saldo = Cache::remember(
+                "saldo_ecommerce:{$ref}:001_008",   // clave (incluye bodegas)
+                now()->addSeconds(30),             // TTL corto (ajústalo: 10–60s)
+                function () use ($ref) {
+                    $res = Product::saldoEcommerce($ref);
+                    return $res ? (float) trim($res->Saldo_final) : null;
+                }
+            );
+
+            $items[] = [
+                'cod_ref' => $ref,
+                'val_ref' => $pricesByRef->get($ref),
+                'saldo'   => $saldo,
+            ];
+        }
+
+        return $this->successResponse(['data' => $items], 200);
     }
 }
